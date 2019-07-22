@@ -4,7 +4,7 @@ With Swagger (ASP Net Core)
 ## Section I : The Background
 
 ### Why documentation matters
-A [survey by ProgrammableWeb] (https://www.programmableweb.com/news/api-consumers-want-reliability-documentation-and-community/2013/01/07) found that API consumers consider complete and accurate documentation as the biggest factor in their API decision making, even outweighing price and API performance.
+A [survey by ProgrammableWeb](https://www.programmableweb.com/news/api-consumers-want-reliability-documentation-and-community/2013/01/07) found that API consumers consider complete and accurate documentation as the biggest factor in their API decision making, even outweighing price and API performance.
 
 Good documentation accelerates development and consumption, and reduces the money and time that would otherwise be spent answering support calls. Documentation is part of the overall user experience, and is one of the biggest factors for increased API growth and usage.
 
@@ -36,19 +36,84 @@ Documentation from the generated contact would mean adding meaningful, understan
 ## Section II : OAS Implementation
 
 ### Common OAS samples
-Most common standart OAS samples can be found on [Swagger Petstore] (https://petstore.swagger.io)
+Most common standart OAS samples can be found on [Swagger Petstore](https://petstore.swagger.io)
 
 ### Requirement
-1. [.Net Core SDK 2.2] (https://dotnet.microsoft.com/download/dotnet-core/2.2)
+1. [.Net Core SDK 2.2](https://dotnet.microsoft.com/download/dotnet-core/2.2)
 2. Visual Studio Code
 3. A new or exsisting Web API project
 
-### Using OAS packages
+### OAS Nuget Packages
 There are two most popular nuget packages that can help us to build OAS Documentation:
 
-1. [Swashbuckle] (https://github.com/domaindrivendev/Swashbuckle) by **Richard Moris** (domaindrivendev)
-2. [NSwag] (https://github.com/RicoSuter/NSwag) by **Rico Sutter** (RicoSuter)
+1. [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle) by **Richard Moris** (domaindrivendev)
+2. [NSwag](https://github.com/RicoSuter/NSwag) by **Rico Sutter** (RicoSuter)
 
+### Initiate Web API Project
+#### Checking net core SDK version
+Before started, please make sure you are using correct dotnet core version by run this command
+
+```
+$ dotnet --version
+```
+Version result
+
+```
+$ 2.2.301
+```
+
+#### Generate New Web API Project
+Create source code folder as Workspace
+
+```
+$ mkdir src
+$ cd src/
+```
+
+Run dotnet CLI command from **src** folder
+
+```
+$ dotnet new webapi -n ArtistManagement.WebApi
+```
+
+Once the project has been created, open it using VS Code
+
+```
+$ code ArtistManagement.WebApi/
+```
+
+> Note: You will need C# VS Code extension **ms-vscode.csharp** and automaticaly donwloading c# depedencies for the first time.
+
+```
+Installing C# dependencies...
+Platform: darwin, x86_64
+
+Downloading package 'OmniSharp for OSX' (43796 KB).................... Done!
+Validating download...
+Integrity Check succeeded.
+Installing package 'OmniSharp for OSX'
+
+Downloading package '.NET Core Debugger (macOS / x64)' (51272 KB).................... Done!
+Validating download...
+Integrity Check succeeded.
+Installing package '.NET Core Debugger (macOS / x64)'
+
+Downloading package 'Razor Language Server (macOS / x64)' (57274 KB).................... Done!
+Installing package 'Razor Language Server (macOS / x64)'
+
+Finished
+```
+
+After all dependencies are installed, try to run/debug your project by pressing **F5** and then try hit values api [https://localhost:5001/api/values](https://localhost:5001/api/values) from any browser, it should be return some result:
+
+```
+["value1","value2"]
+```
+
+#### Add More API Controllers
+For the next step, lets try add another CRUD api controller. Each controllers action will need http  operations: GET, POST, PUT & Delete.
+
+#### Installing Package
 At this time, we will use Swashbuckle packages
 ```
 $ Install-Package Swashbuckle.Core
