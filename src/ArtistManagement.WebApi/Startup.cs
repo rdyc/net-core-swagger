@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ArtistManagement.WebApi.Application;
+using ArtistManagement.WebApi.Application.Services;
+using ArtistManagement.WebApi.Domain;
+using ArtistManagement.WebApi.Domain.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace ArtistManagement.WebApi
 {
@@ -26,6 +25,20 @@ namespace ArtistManagement.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // DbContext
+            services.AddDbContext<ArtistDbContext>(options => {
+                options
+                    .UseSqlite(Configuration.GetConnectionString("ArtistDbContext"))
+                    .EnableSensitiveDataLogging(false)
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            });
+
+            // Services & Repositories
+            services.AddTransient<IArtistService, ArtistService>();
+            services.AddTransient<IArtistRepository, ArtistRepository>();
+
+            // services.AddTransient<IMapper, MapperConfiguration>().CreateMapper()>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,7 +53,9 @@ namespace ArtistManagement.WebApi
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
+            app.UseArtistMigration(env);
+            
             app.UseHttpsRedirection();
             app.UseMvc();
         }
