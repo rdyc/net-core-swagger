@@ -41,21 +41,6 @@ namespace ArtistManagement.WebApi.Domain.Entities
             return track; 
         }
         #endregion
-
-        #region Albums
-        public ICollection<AlbumEntity> Albums { get; private set; }
-
-        public AlbumEntity AddAlbum(string title, DateTime release)
-        {
-            var album = new AlbumEntity(
-                artistId: Id, 
-                title: title, 
-                release: release
-            );
-
-            return album; 
-        }
-        #endregion
     
         #region Methods
 

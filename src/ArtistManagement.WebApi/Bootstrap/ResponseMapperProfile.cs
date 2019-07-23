@@ -4,9 +4,9 @@ using AutoMapper;
 
 namespace ArtistManagement.WebApi.Bootstrap
 {
-    public class MapperProfile<E, M> : Profile where E : Entity where M : BaseModel
+    public class ResponseMapperProfile<E, M> : Profile where E : Entity where M : BaseModel
     {
-        public MapperProfile()
+        public ResponseMapperProfile()
         {
             CreateMap<E, M>();
             

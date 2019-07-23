@@ -21,7 +21,6 @@ namespace ArtistManagement.WebApi.Domain.Entities
 
         #region Properties
         public string Id { get; private set; }
-
         public string TrackId { get; private set; }
         public string AlbumId { get; private set; }
         #endregion

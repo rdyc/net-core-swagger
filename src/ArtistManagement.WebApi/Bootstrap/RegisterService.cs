@@ -37,8 +37,10 @@ namespace ArtistManagement.WebApi.Bootstrap
         {
             services.AddTransient<IArtistService, ArtistService>();
             services.AddTransient<ITrackService, TrackService>();
+            services.AddTransient<IAlbumService, AlbumService>();
 
             services.AddTransient<IArtistRepository, ArtistRepository>();
+            services.AddTransient<IAlbumRepository, AlbumRepository>();
 
             return services;
         }
@@ -46,9 +48,11 @@ namespace ArtistManagement.WebApi.Bootstrap
         private static IServiceCollection AddAutoMapper(IServiceCollection services)
         {
             var config = new MapperConfiguration(options => {
-                //options.CreateMissingTypeMaps = true;
-                options.AddProfile<MapperProfile<ArtistEntity, ArtistModel>>();
-                options.AddProfile<MapperProfile<TrackEntity, TrackModel>>();
+                options.AddProfile<ResponseMapperProfile<ArtistEntity, ArtistModel>>();
+                options.AddProfile<ResponseMapperProfile<TrackEntity, TrackModel>>();
+                options.AddProfile<ResponseMapperProfile<AlbumEntity, AlbumModel>>();
+
+                options.AddProfile<CustomMapperProfile>();
             });
 
             // config.AssertConfigurationIsValid();

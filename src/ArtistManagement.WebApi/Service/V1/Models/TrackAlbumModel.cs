@@ -1,10 +1,12 @@
+using System;
 using ArtistManagement.WebApi.Infrastructure;
 
 namespace ArtistManagement.WebApi.V1.Models
 {
-    public class ArtistPostModel : BaseModel
+    public class TrackAlbumModel : BaseModel
     {
+        public string Id { get; set; }
         public string Name { get; set; }
-        public string Nationality { get; set; }
+        public DateTime Release { get; set; }
     }
 }

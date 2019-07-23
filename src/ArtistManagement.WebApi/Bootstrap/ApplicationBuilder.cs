@@ -38,6 +38,8 @@ namespace ArtistManagement.WebApi.Bootstrap
 
         private static void SeedArtists(ArtistDbContext context)
         {
+            var faker = new Faker();
+
             var nationalities = new [] { "Argentina", "Australia", "Austria", "Brazil", "Canada", "Denmark", "England", "France", "Germany", "Indonesia", "Italy", "Malaysia", "Rusia", "United States", "Zimbabwe" };
             var genres = new []{ "Alternative", "Anime", "Blues", "Classical", "Country", "Dance", "Hip-hop", "Pop", "Rock", "Jazz", "R&B/Soul", "Reggae" };
             
@@ -45,8 +47,6 @@ namespace ArtistManagement.WebApi.Bootstrap
             {
                 for (int i = 0; i < 100; i++)
                 {
-                    var faker = new Faker();
-
                     // add artists
                     var artist = new ArtistEntity(
                         name: faker.Person.FullName,
@@ -70,23 +70,20 @@ namespace ArtistManagement.WebApi.Bootstrap
                         context.Entry(track).State = EntityState.Added;
                     }
 
-                    // add artist albums
-                    for (int j = 0; j < faker.Random.Int(1, 2); j++)
+                    // add albums
+                    var album = new AlbumEntity(
+                        title: faker.Random.Words(2), 
+                        release: faker.Date.Between(DateTime.Now.AddYears(-10).Date, DateTime.Now.Date)
+                    );
+
+                    context.Entry(album).State = EntityState.Added;
+
+                    // add album tracks
+                    foreach (var item in trackIds)
                     {
-                        var album = artist.AddAlbum(
-                            title: faker.Random.Words(2), 
-                            release: faker.Date.Between(DateTime.Now.AddYears(2000).Date, DateTime.Now.Date)
-                        );
+                        var albumTrack = album.AddTrack(trackId: item);
 
-                        context.Entry(album).State = EntityState.Added;
-
-                        // add album tracks
-                        foreach (var item in trackIds)
-                        {
-                            var albumTrack = album.AddTrack(trackId: item);
-
-                            context.Entry(albumTrack).State = EntityState.Added;
-                        }
+                        context.Entry(albumTrack).State = EntityState.Added;
                     }
                 }
             }

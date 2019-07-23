@@ -1,10 +1,10 @@
 namespace ArtistManagement.WebApi.V1.Models
 {
-    public class ArtistPutModel : ArtistPostModel
+    public class AlbumPutModel : AlbumPostModel
     {
         public string Id { get; private set; }
 
-        public ArtistPutModel WithId (string id) 
+        public AlbumPutModel WithId (string id) 
         {
             Id = id;
 

@@ -4,7 +4,7 @@ using ArtistManagement.WebApi.Infrastructure;
 
 namespace ArtistManagement.WebApi.Domain.Entities
 {
-    public class AlbumEntity : Entity
+    public class AlbumEntity : Entity, IAggregateRoot
     {
         #region Constructor
         protected AlbumEntity()
@@ -12,9 +12,8 @@ namespace ArtistManagement.WebApi.Domain.Entities
 
         }
 
-        public AlbumEntity(string artistId, string title, DateTime release)
+        public AlbumEntity(string title, DateTime release)
         { 
-            ArtistId = artistId;
             Name = title;
             Release = release;
         }
@@ -22,17 +21,12 @@ namespace ArtistManagement.WebApi.Domain.Entities
 
         #region Properties
         public string Id { get; private set; }
-        public string ArtistId { get; private set; }
         public string Name { get; private set; }
         public DateTime Release { get; private set; }
         #endregion
 
-        #region Artist
-        public ArtistEntity Artist { get; private set; }
-        #endregion
-
         #region Tracks
-        public ICollection<AlbumTrackEntity> Tracks { get; private set; }
+        public ICollection<AlbumTrackEntity> AlbumTracks { get; private set; }
 
         public AlbumTrackEntity AddTrack(string trackId)
         {
@@ -43,6 +37,16 @@ namespace ArtistManagement.WebApi.Domain.Entities
 
             return albumTrack;
         }
+        #endregion
+
+        #region Methods
+
+        public void SetUpdate(string name, DateTime release)
+        {
+            Name = name;
+            Release = release;
+        }
+            
         #endregion
     }
 }

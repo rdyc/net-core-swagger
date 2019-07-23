@@ -9,41 +9,33 @@ using ArtistManagement.WebApi.Domain.Repositories;
 using ArtistManagement.WebApi.Infrastructure;
 using ArtistManagement.WebApi.V1.Models;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 namespace ArtistManagement.WebApi.Application.Services
 {
-    internal class TrackService : ITrackService
+    internal class AlbumService : IAlbumService
     {
-        private readonly IArtistRepository repository;
+        private readonly IAlbumRepository repository;
         private readonly IMapper mapper;
 
-        public TrackService(IArtistRepository repository, IMapper mapper)
+        public AlbumService(IAlbumRepository repository, IMapper mapper)
         {
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<CollectionResponse<TrackModel>> Get(QueryRequest<TrackField> request)
+        public async Task<CollectionResponse<AlbumModel>> Get(QueryRequest<AlbumField> request)
         {
             try
             {
                 // get all
-                var artist = repository.Get(e => e.Tracks);
-                var data = artist.SelectMany(e => e.Tracks);
-                
-                // include relation
-                data = data
-                    .Include(e => e.Artist)
-                    .Include(e => e.AlbumTracks)
-                        .ThenInclude(e => e.Album);
+                var data = repository.Get();
 
                 // filter find
                 if(!string.IsNullOrEmpty(request.Find) && !request.FindBy.HasValue)
                 {
                     data = data.Where(e => 
                         e.Id.Contains(request.Find) || 
-                        e.Title.Contains(request.Find));
+                        e.Name.Contains(request.Find));
                 }
 
                 // filter find & find by
@@ -51,12 +43,12 @@ namespace ArtistManagement.WebApi.Application.Services
                 {
                     switch (request.FindBy.Value)
                     {
-                        case TrackField.Id :
+                        case AlbumField.Id :
                             data = data.Where(e => e.Id.Contains(request.Find));
                             break;
 
-                        case TrackField.Title :
-                            data = data.Where(e => e.Title.Contains(request.Find));
+                        case AlbumField.Name :
+                            data = data.Where(e => e.Name.Contains(request.Find));
                             break;
 
                         default:
@@ -69,12 +61,12 @@ namespace ArtistManagement.WebApi.Application.Services
                 {
                     switch (request.SortBy.Value)
                     {
-                        case TrackField.Id :
+                        case AlbumField.Id :
                             data = data.OrderBy(e => e.Id);
                             break;
 
-                        case TrackField.Title :
-                            data = data.OrderBy(e => e.Title);
+                        case AlbumField.Name :
+                            data = data.OrderBy(e => e.Name);
                             break;
 
                         default:
@@ -87,16 +79,16 @@ namespace ArtistManagement.WebApi.Application.Services
                 {
                     switch (request.SortBy.Value)
                     {
-                        case TrackField.Id :
+                        case AlbumField.Id :
                             data = request.SortDirection.Equals(SortDirection.Ascending) ? 
                                 data.OrderBy(e => e.Id) : 
                                 data.OrderByDescending(e => e.Id);
                             break;
 
-                        case TrackField.Title :
+                        case AlbumField.Name :
                             data = request.SortDirection.Equals(SortDirection.Ascending) ? 
-                                data.OrderBy(e => e.Title) : 
-                                data.OrderByDescending(e => e.Title);
+                                data.OrderBy(e => e.Name) : 
+                                data.OrderByDescending(e => e.Name);
                             break;
 
                         default:
@@ -105,7 +97,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 }
 
                 // parse into data transfer object
-                var dto = new CollectionDto<TrackEntity>
+                var dto = new CollectionDto<AlbumEntity>
                 {
                     Total = data.Count(),
                     Size = request.Size,
@@ -116,7 +108,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 };
 
                 // mapping into result
-                var result = mapper.Map<CollectionResponse<TrackModel>>(dto.WithPage(request.Page));
+                var result = mapper.Map<CollectionResponse<AlbumModel>>(dto.WithPage(request.Page));
 
                 return await Task.FromResult(result);   
             }
@@ -126,22 +118,15 @@ namespace ArtistManagement.WebApi.Application.Services
             }
         }
 
-        public async Task<SingleResponse<TrackModel>> Get(string id)
+        public async Task<SingleResponse<AlbumModel>> Get(string id)
         {
             try
             {
-                // get artist by id
-                var artist = repository.Get(e => e.Tracks);
-                
-                // get track by id
-                var data = artist.SelectMany(e => e.Tracks.Where(t => t.Id.Equals(id)))
-                    .Include(e => e.Artist)
-                    .Include(e => e.AlbumTracks)
-                        .ThenInclude(e => e.Album)
-                    .SingleOrDefault();
+                // get by id
+                var data = repository.Get(id);
 
                 // mapping into result
-                var result = mapper.Map<SingleResponse<TrackModel>>(data);
+                var result = mapper.Map<SingleResponse<AlbumModel>>(data);
 
                 return await Task.FromResult(result);
             }
@@ -151,15 +136,12 @@ namespace ArtistManagement.WebApi.Application.Services
             }
         }
 
-        public async Task<SingleResponse<TrackModel>> Add(TrackPostModel payload)
+        public async Task<SingleResponse<AlbumModel>> Add(AlbumPostModel payload)
         {
             try
             {
-                // get artist by id
-                var artist = repository.Get(payload.ArtistId, e => e.Tracks);
-
-                // add new track
-                var data = artist.AddTrack(payload.Title, payload.Genre, payload.Duration);
+                // create new
+                var data = new AlbumEntity(payload.Name, payload.Release);
 
                 // add into repository
                 repository.Add(data);
@@ -168,7 +150,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 await repository.SaveChangesAsync();
 
                 // mapping into result
-                return mapper.Map<SingleResponse<TrackModel>>(data);   
+                return mapper.Map<SingleResponse<AlbumModel>>(data);   
             }
             catch (Exception ex)
             {
@@ -176,18 +158,15 @@ namespace ArtistManagement.WebApi.Application.Services
             }
         }
 
-        public async Task<SingleResponse<TrackModel>> Update(TrackPutModel payload)
+        public async Task<SingleResponse<AlbumModel>> Update(AlbumPutModel payload)
         {
             try
             {
-                // get artist by id
-                var artist = repository.Get(payload.ArtistId, e => e.Tracks);
+                // get by id
+                var data = repository.Get(payload.Id);
                 
-                // get track by id
-                var data = artist.Tracks.SingleOrDefault(e => e.Id.Equals(payload.Id));
-                
-                // set udate
-                data.SetUpdate(payload.Title, payload.Genre, payload.Duration);
+                // set update
+                data.SetUpdate(payload.Name, payload.Release);
 
                 // update repository
                 repository.Update(data);
@@ -196,7 +175,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 await repository.SaveChangesAsync();
 
                 // mapping into result
-                return mapper.Map<SingleResponse<TrackModel>>(data);   
+                return mapper.Map<SingleResponse<AlbumModel>>(data);   
             }
             catch (Exception ex)
             {
@@ -208,11 +187,8 @@ namespace ArtistManagement.WebApi.Application.Services
         {
             try
             {
-                // get all
-                var artist = repository.Get(e => e.Tracks);
-
-                // get track by id
-                var data = artist.SelectMany(e => e.Tracks.Where(t => t.Id.Equals(id))).SingleOrDefault();
+                // get by id
+                var data = repository.Get(id);
 
                 // delete from repository
                 repository.Delete(data);

@@ -28,7 +28,6 @@ namespace ArtistManagement.WebApi.Domain
             builder.HasKey(e => e.Id);
 
             builder.HasMany(e => e.Tracks).WithOne(e => e.Artist).HasForeignKey(e => e.ArtistId);
-            builder.HasMany(e => e.Albums).WithOne(e => e.Artist).HasForeignKey(e => e.ArtistId);
 
             builder.Property(e => e.Id).HasMaxLength(14).IsRequired();
             builder.Property(e => e.Name).HasMaxLength(255).IsRequired();
@@ -52,11 +51,9 @@ namespace ArtistManagement.WebApi.Domain
         {
             builder.HasKey(e => e.Id);
             
-            builder.HasOne(e => e.Artist).WithMany(e => e.Albums).HasForeignKey(e => e.ArtistId);
-            builder.HasMany(e => e.Tracks).WithOne(e => e.Album).HasForeignKey(e => e.AlbumId);
+            builder.HasMany(e => e.AlbumTracks).WithOne(e => e.Album).HasForeignKey(e => e.AlbumId);
 
             builder.Property(e => e.Id).HasMaxLength(14).IsRequired();
-            builder.Property(e => e.ArtistId).HasMaxLength(14).IsRequired();
             builder.Property(e => e.Name).HasMaxLength(255).IsRequired();
             builder.Property(e => e.Release).IsRequired();
         }
@@ -65,7 +62,7 @@ namespace ArtistManagement.WebApi.Domain
         {
             builder.HasKey(e => e.Id);
 
-            builder.HasOne(e => e.Album).WithMany(e => e.Tracks).HasForeignKey(e => e.AlbumId);
+            builder.HasOne(e => e.Album).WithMany(e => e.AlbumTracks).HasForeignKey(e => e.AlbumId);
             builder.HasOne(e => e.Track).WithMany(e => e.AlbumTracks).HasForeignKey(e => e.TrackId);
 
             builder.Property(e => e.Id).HasMaxLength(14).IsRequired();
