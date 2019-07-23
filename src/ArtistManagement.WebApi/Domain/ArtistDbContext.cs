@@ -31,7 +31,7 @@ namespace ArtistManagement.WebApi.Domain
 
             builder.Property(e => e.Id).HasMaxLength(14).IsRequired();
             builder.Property(e => e.Name).HasMaxLength(255).IsRequired();
-            builder.Property(e => e.Nationality).HasMaxLength(1).IsRequired();
+            builder.Property(e => e.Nationality).HasMaxLength(100).IsRequired();
         }
 
         private static void ConfigureTrack(EntityTypeBuilder<TrackEntity> builder)

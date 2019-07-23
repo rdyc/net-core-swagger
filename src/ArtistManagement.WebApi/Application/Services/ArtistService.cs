@@ -216,5 +216,22 @@ namespace ArtistManagement.WebApi.Application.Services
                 throw ex;
             }
         }
+
+        public async Task<bool> IsValidAsync(string id)
+        {
+            try
+            {
+                // get all
+                var data = repository.Get();
+
+                var result = data.Any(e => e.Id.Equals(id));
+                
+                return await Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

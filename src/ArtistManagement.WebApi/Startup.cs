@@ -1,4 +1,6 @@
 ﻿using ArtistManagement.WebApi.Bootstrap;
+using ArtistManagement.WebApi.Infrastructure.Filters;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +21,14 @@ namespace ArtistManagement.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvc(o => {
+                    o.Filters.Add(typeof(ValidateModelStateFilter));
+                    o.Filters.Add(typeof(HttpGlobalExceptionFilter));
+                })
+                .AddControllersAsServices()
+                .AddFluentValidation(o => o.RunDefaultMvcValidationAfterFluentValidationExecutes = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddArtistManagement(Configuration);
         }

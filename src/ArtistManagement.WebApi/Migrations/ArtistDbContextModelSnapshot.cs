@@ -68,7 +68,7 @@ namespace ArtistManagement.WebApi.Migrations
 
                     b.Property<string>("Nationality")
                         .IsRequired()
-                        .HasMaxLength(1);
+                        .HasMaxLength(100);
 
                     b.HasKey("Id");
 

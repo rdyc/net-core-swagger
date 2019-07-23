@@ -18,5 +18,7 @@ namespace ArtistManagement.WebApi.Infrastructure
         Task<SingleResponse<M>> Update(U payload);
 
         Task Delete(string id);
+
+        Task<bool> IsValidAsync(string id);
     }
 }

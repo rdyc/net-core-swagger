@@ -26,7 +26,7 @@ namespace ArtistManagement.WebApi.Migrations
                 {
                     Id = table.Column<string>(maxLength: 14, nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
-                    Nationality = table.Column<string>(maxLength: 1, nullable: false)
+                    Nationality = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {

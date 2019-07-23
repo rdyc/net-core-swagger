@@ -4,6 +4,7 @@ using ArtistManagement.WebApi.Domain.Entities;
 using ArtistManagement.WebApi.Domain.Repositories;
 using ArtistManagement.WebApi.V1.Models;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,10 +36,20 @@ namespace ArtistManagement.WebApi.Bootstrap
 
         private static IServiceCollection AddApplicationService(IServiceCollection services)
         {
+            // services
             services.AddTransient<IArtistService, ArtistService>();
             services.AddTransient<ITrackService, TrackService>();
             services.AddTransient<IAlbumService, AlbumService>();
 
+            // validators
+            services.AddTransient<IValidator<ArtistPostModel>, ArtistPostModelValidator>();
+            services.AddTransient<IValidator<ArtistPutModel>, ArtistPutModelValidator>();
+            services.AddTransient<IValidator<TrackPostModel>, TrackPostModelValidator>();
+            services.AddTransient<IValidator<TrackPutModel>, TrackPutModelValidator>();
+            services.AddTransient<IValidator<AlbumPostModel>, AlbumPostModelValidator>();
+            services.AddTransient<IValidator<AlbumPutModel>, AlbumPutModelValidator>();
+            
+            // repositories
             services.AddTransient<IArtistRepository, ArtistRepository>();
             services.AddTransient<IAlbumRepository, AlbumRepository>();
 
