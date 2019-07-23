@@ -1,12 +1,7 @@
-﻿using ArtistManagement.WebApi.Application;
-using ArtistManagement.WebApi.Application.Services;
-using ArtistManagement.WebApi.Domain;
-using ArtistManagement.WebApi.Domain.Repositories;
-using AutoMapper;
+﻿using ArtistManagement.WebApi.Bootstrap;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,19 +21,7 @@ namespace ArtistManagement.WebApi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // DbContext
-            services.AddDbContext<ArtistDbContext>(options => {
-                options
-                    .UseSqlite(Configuration.GetConnectionString("ArtistDbContext"))
-                    .EnableSensitiveDataLogging(false)
-                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
-
-            // Services & Repositories
-            services.AddTransient<IArtistService, ArtistService>();
-            services.AddTransient<IArtistRepository, ArtistRepository>();
-
-            // services.AddTransient<IMapper, MapperConfiguration>().CreateMapper()>();
+            services.AddArtistManagement(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -2,8 +2,8 @@ using ArtistManagement.WebApi.Infrastructure;
 
 namespace ArtistManagement.WebApi.Application.Responses
 {
-    public class CollectionResponse<T> : ListResponse<T> where T : IBaseModel
+    public class CollectionResponse<T> : ListResponse<T> where T : BaseModel
     {
-        public Metadata Metadata { get; private set; }
+        public Meta Meta { get; private set; }
     }
 }

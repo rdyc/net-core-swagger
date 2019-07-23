@@ -6,9 +6,9 @@ namespace ArtistManagement.WebApi.Application.Services
 {
     public interface IArtistService
     {
-        Task<CollectionResponse<ArtistModel>> Get(string page, string size);
+        Task<CollectionResponse<ArtistModel>> Get(int page, int size);
 
-        Task<ListResponse<ArtistModel>> Get(string name, string category, string page, string size);
+        Task<ListResponse<ArtistModel>> Get(string name, string category, int page, int size);
 
         Task<SingleResponse<ArtistModel>> Get(string id);
 

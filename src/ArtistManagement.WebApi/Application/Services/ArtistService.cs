@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ArtistManagement.WebApi.Application.Responses;
+using ArtistManagement.WebApi.Domain.Entities;
 using ArtistManagement.WebApi.Domain.Repositories;
+using ArtistManagement.WebApi.Infrastructure;
 using ArtistManagement.WebApi.V1.Models;
 using AutoMapper;
 
@@ -19,16 +21,27 @@ namespace ArtistManagement.WebApi.Application.Services
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<CollectionResponse<ArtistModel>> Get(string page, string size)
+        public async Task<CollectionResponse<ArtistModel>> Get(int page, int size)
         {
+            if (page < 1) page = 1;
+
             var data = repository.Get();
 
-            var result = mapper.Map<CollectionResponse<ArtistModel>>(data);
+            var dto = new CollectionDto<ArtistEntity>
+            {
+                Total = data.Count(),
+                Size = size,
+                Data = data.Skip((page - 1) * size).Take(size).AsEnumerable()
+            };
+
+            dto.SetPage(page);
+
+            var result = mapper.Map<CollectionResponse<ArtistModel>>(dto);
 
             return await Task.FromResult(result);
         }
 
-        public async Task<ListResponse<ArtistModel>> Get(string name, string category, string page, string size)
+        public async Task<ListResponse<ArtistModel>> Get(string name, string category, int page, int size)
         {
             var data = repository.Get();
 

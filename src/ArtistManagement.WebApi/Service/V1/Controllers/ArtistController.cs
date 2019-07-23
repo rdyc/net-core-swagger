@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtistManagement.WebApi.V1.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/artists")]
     [ApiController]
     public class ArtistController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<CollectionResponse<ArtistModel>>> Get(string page, string size)
+        public async Task<ActionResult<CollectionResponse<ArtistModel>>> Get(int page = 1, int size = 10)
         {
             var data = await artist.Get(page, size);
 
@@ -30,7 +30,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<ListResponse<ArtistModel>>> Get(string name, string category, string page, string size)
+        public async Task<ActionResult<ListResponse<ArtistModel>>> Get(string name, string category, int page, int size)
         {
             var data = await artist.Get(name, category, page, size);
 

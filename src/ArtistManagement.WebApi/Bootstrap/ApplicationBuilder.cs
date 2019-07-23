@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ArtistManagement.WebApi.Application
+namespace ArtistManagement.WebApi.Bootstrap
 {
-    public static class ArtistBuilder
+    public static class ApplicationBuilder
     {
         public static IApplicationBuilder UseArtistMigration(this IApplicationBuilder app, IHostingEnvironment env)
         {
