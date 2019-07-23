@@ -9,9 +9,11 @@ namespace ArtistManagement.WebApi.V1.Models
         public string Nationality { get; set;}
         public string Genre { get; set;}
 
-        public void SetId (string id) 
+        public ArtistPayloadModel WithId (string id) 
         {
             Id = id;
+
+            return this;
         }
     }
 }

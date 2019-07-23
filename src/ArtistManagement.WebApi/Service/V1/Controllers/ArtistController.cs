@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using ArtistManagement.WebApi.Application.Fields;
+using ArtistManagement.WebApi.Application.Requests;
 using ArtistManagement.WebApi.Application.Responses;
 using ArtistManagement.WebApi.Application.Services;
 using ArtistManagement.WebApi.V1.Models;
@@ -22,51 +24,46 @@ namespace ArtistManagement.WebApi.V1.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<CollectionResponse<ArtistModel>>> Get(int page = 1, int size = 10)
+        public async Task<IActionResult> Get([FromQuery]QueryStringRequest<ArtistField> request)
         {
-            var data = await artist.Get(page, size);
+            var data = await artist.Get(request);
 
-            return mapper.Map<CollectionResponse<ArtistModel>>(data);
-        }
-
-        [HttpGet("list")]
-        public async Task<ActionResult<ListResponse<ArtistModel>>> Get(string name, string category, int page, int size)
-        {
-            var data = await artist.Get(name, category, page, size);
-
-            return mapper.Map<CollectionResponse<ArtistModel>>(data);
+            return Ok(mapper.Map<CollectionResponse<ArtistModel>>(data));
         }
 
         [HttpGet("{artistId}")]
-        public async Task<ActionResult<SingleResponse<ArtistModel>>> Get(string artistId)
+        public async Task<IActionResult> Get(string artistId)
         {
             var data = await artist.Get(artistId);
+            
+            if (data == null)
+                return NotFound();
 
-            return mapper.Map<SingleResponse<ArtistModel>>(data);
+            return Ok(mapper.Map<SingleResponse<ArtistModel>>(data));
         }
 
         [HttpPost]
-        public async Task<ActionResult<SingleResponse<ArtistModel>>> Post([FromBody] ArtistPayloadModel payload)
+        public async Task<IActionResult> Post([FromBody] ArtistPayloadModel payload)
         {
             var created = await artist.Add(payload);
 
-            return mapper.Map<SingleResponse<ArtistModel>>(created);
+            return Created(string.Empty, mapper.Map<SingleResponse<ArtistModel>>(created));
         }
 
-        [HttpPut]
-        public async Task<ActionResult<SingleResponse<ArtistModel>>> Put([FromBody] ArtistPayloadModel payload)
+        [HttpPut("{artistId}")]
+        public async Task<IActionResult> Put(string artistId, [FromBody] ArtistPayloadModel payload)
         {
-            var updated = await artist.Add(payload);
+            var updated = await artist.Add(payload.WithId(artistId));
 
-            return mapper.Map<SingleResponse<ArtistModel>>(updated);
+            return Accepted(mapper.Map<SingleResponse<ArtistModel>>(updated));
         }
 
-        [HttpDelete]
-        public async Task<bool> Delete(string id)
+        [HttpDelete("{artistId}")]
+        public async Task<IActionResult> Delete(string artistId)
         {
-            var deleted = await artist.Delete(id);
+            await artist.Delete(artistId);
 
-            return deleted;
+            return Accepted();
         }
     }
 }

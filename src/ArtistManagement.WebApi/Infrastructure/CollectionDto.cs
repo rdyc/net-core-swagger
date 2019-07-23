@@ -8,9 +8,11 @@ namespace ArtistManagement.WebApi.Infrastructure
         public int Total { get; set; }
         public int Size { get; set; }
         public PageDto Page { get; private set; }
-        public void SetPage (int page) 
+        public CollectionDto<T> WithPage (int page) 
         {
             Page = new PageDto(page, Total, Size);
+
+            return this;
         }
     }
 }

@@ -7,7 +7,13 @@ namespace ArtistManagement.WebApi.Domain.Entities
     public class ArtistEntity : Entity, IAggregateRoot
     {
         #region Constructor
-            
+        public ArtistEntity(string name, string nationality)
+        {
+            Id = Guid.NewGuid().ToString();
+            Name = name;
+            Nationality = nationality;
+        }
+
         #endregion
 
         #region Properties
@@ -47,6 +53,16 @@ namespace ArtistManagement.WebApi.Domain.Entities
 
             return album; 
         }
+        #endregion
+    
+        #region Methods
+
+        public void SetUpdate(string name, string nationality)
+        {
+            Name = name;
+            Nationality = nationality;
+        }
+            
         #endregion
     }
 }

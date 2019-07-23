@@ -6,7 +6,7 @@ namespace ArtistManagement.WebApi.Infrastructure
     {
         public PageDto(int current, int total, int size)
         {
-            Current = current;
+            Current = current + 1;
             Total = (int)Math.Ceiling((double)total / (double)size);
             Next = Current < Total && Current >= 1;
             Previous = Current > 1 && Current <= Total;

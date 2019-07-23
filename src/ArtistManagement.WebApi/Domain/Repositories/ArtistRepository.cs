@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using ArtistManagement.WebApi.Domain.Entities;
 using ArtistManagement.WebApi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,11 @@ namespace ArtistManagement.WebApi.Domain.Repositories
         public void Delete(ArtistEntity entity)
         {
             context.Entry(entity).State = EntityState.Deleted;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await context.SaveChangesAsync();
         }
     }
 }

@@ -10,6 +10,9 @@ namespace ArtistManagement.WebApi.Bootstrap
         {
             CreateMap<E, M>();
             
+            CreateMap<E, SingleResponse<M>>()
+                .ForMember(m => m.Data, o => o.MapFrom(s => s));
+            
             CreateMap<PageDto, Page>();
 
             CreateMap<CollectionDto<E>, Meta>()
