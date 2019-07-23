@@ -3,11 +3,11 @@ using ArtistManagement.WebApi.Infrastructure;
 
 namespace ArtistManagement.WebApi.Application.Requests
 {
-    public class QueryStringRequest<T> where T : struct, IConvertible
+    public class QueryRequest<T> where T : struct, IConvertible
     {
         private int page = 0;
 
-        public QueryStringRequest()
+        public QueryRequest()
         {
             if (!typeof(T).IsEnum)
             {

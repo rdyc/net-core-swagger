@@ -24,7 +24,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]QueryStringRequest<ArtistField> request)
+        public async Task<IActionResult> Get([FromQuery]QueryRequest<ArtistField> request)
         {
             var data = await artist.Get(request);
 
@@ -43,7 +43,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ArtistPayloadModel payload)
+        public async Task<IActionResult> Post([FromBody] ArtistPostModel payload)
         {
             var created = await artist.Add(payload);
 
@@ -51,9 +51,9 @@ namespace ArtistManagement.WebApi.V1.Controllers
         }
 
         [HttpPut("{artistId}")]
-        public async Task<IActionResult> Put(string artistId, [FromBody] ArtistPayloadModel payload)
+        public async Task<IActionResult> Put(string artistId, [FromBody] ArtistPutModel payload)
         {
-            var updated = await artist.Add(payload.WithId(artistId));
+            var updated = await artist.Update(payload.WithId(artistId));
 
             return Accepted(mapper.Map<SingleResponse<ArtistModel>>(updated));
         }

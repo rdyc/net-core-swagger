@@ -36,6 +36,8 @@ namespace ArtistManagement.WebApi.Domain.Repositories
             return context.Artists.Include(includes).SingleOrDefault(e => e.Id.Equals(id));
         }
 
+        #region Artist
+            
         public void Add(ArtistEntity entity)
         {
             context.Entry(entity).State = EntityState.Added;
@@ -50,6 +52,27 @@ namespace ArtistManagement.WebApi.Domain.Repositories
         {
             context.Entry(entity).State = EntityState.Deleted;
         }
+
+        #endregion
+
+        #region Track
+            
+        public void Add(TrackEntity entity)
+        {
+            context.Entry(entity).State = EntityState.Added;
+        }
+
+        public void Update(TrackEntity entity)
+        {
+            context.Entry(entity).State = EntityState.Modified;
+        }
+
+        public void Delete(TrackEntity entity)
+        {
+            context.Entry(entity).State = EntityState.Deleted;
+        }
+        
+        #endregion
 
         public async Task<int> SaveChangesAsync()
         {

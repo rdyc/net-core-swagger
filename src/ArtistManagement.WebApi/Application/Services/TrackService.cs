@@ -9,34 +9,38 @@ using ArtistManagement.WebApi.Domain.Repositories;
 using ArtistManagement.WebApi.Infrastructure;
 using ArtistManagement.WebApi.V1.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArtistManagement.WebApi.Application.Services
 {
-    internal class ArtistService : IArtistService
+    internal class TrackService : ITrackService
     {
         private readonly IArtistRepository repository;
         private readonly IMapper mapper;
 
-        public ArtistService(IArtistRepository repository, IMapper mapper)
+        public TrackService(IArtistRepository repository, IMapper mapper)
         {
             this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<CollectionResponse<ArtistModel>> Get(QueryRequest<ArtistField> request)
+        public async Task<CollectionResponse<TrackModel>> Get(QueryRequest<TrackField> request)
         {
             try
             {
                 // get all
-                var data = repository.Get();
+                var artist = repository.Get(e => e.Tracks);
+                var data = artist.SelectMany(e => e.Tracks);
+                
+                // include parent
+                data = data.Include(t => t.Artist);
 
                 // filter find
                 if(!string.IsNullOrEmpty(request.Find) && !request.FindBy.HasValue)
                 {
                     data = data.Where(e => 
                         e.Id.Contains(request.Find) || 
-                        e.Name.Contains(request.Find) || 
-                        e.Nationality.Contains(request.Find));
+                        e.Title.Contains(request.Find));
                 }
 
                 // filter find & find by
@@ -44,16 +48,12 @@ namespace ArtistManagement.WebApi.Application.Services
                 {
                     switch (request.FindBy.Value)
                     {
-                        case ArtistField.Id :
+                        case TrackField.Id :
                             data = data.Where(e => e.Id.Contains(request.Find));
                             break;
 
-                        case ArtistField.Name :
-                            data = data.Where(e => e.Name.Contains(request.Find));
-                            break;
-
-                        case ArtistField.Nationality :
-                            data = data.Where(e => e.Nationality.Contains(request.Find));
+                        case TrackField.Title :
+                            data = data.Where(e => e.Title.Contains(request.Find));
                             break;
 
                         default:
@@ -66,16 +66,12 @@ namespace ArtistManagement.WebApi.Application.Services
                 {
                     switch (request.SortBy.Value)
                     {
-                        case ArtistField.Id :
+                        case TrackField.Id :
                             data = data.OrderBy(e => e.Id);
                             break;
 
-                        case ArtistField.Name :
-                            data = data.OrderBy(e => e.Name);
-                            break;
-
-                        case ArtistField.Nationality :
-                            data = data.OrderBy(e => e.Nationality);
+                        case TrackField.Title :
+                            data = data.OrderBy(e => e.Title);
                             break;
 
                         default:
@@ -88,22 +84,16 @@ namespace ArtistManagement.WebApi.Application.Services
                 {
                     switch (request.SortBy.Value)
                     {
-                        case ArtistField.Id :
+                        case TrackField.Id :
                             data = request.SortDirection.Equals(SortDirection.Ascending) ? 
                                 data.OrderBy(e => e.Id) : 
                                 data.OrderByDescending(e => e.Id);
                             break;
 
-                        case ArtistField.Name :
+                        case TrackField.Title :
                             data = request.SortDirection.Equals(SortDirection.Ascending) ? 
-                                data.OrderBy(e => e.Name) : 
-                                data.OrderByDescending(e => e.Name);
-                            break;
-
-                        case ArtistField.Nationality :
-                            data = request.SortDirection.Equals(SortDirection.Ascending) ? 
-                                data.OrderBy(e => e.Nationality) : 
-                                data.OrderByDescending(e => e.Nationality);
+                                data.OrderBy(e => e.Title) : 
+                                data.OrderByDescending(e => e.Title);
                             break;
 
                         default:
@@ -112,7 +102,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 }
 
                 // parse into data transfer object
-                var dto = new CollectionDto<ArtistEntity>
+                var dto = new CollectionDto<TrackEntity>
                 {
                     Total = data.Count(),
                     Size = request.Size,
@@ -123,7 +113,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 };
 
                 // mapping into result
-                var result = mapper.Map<CollectionResponse<ArtistModel>>(dto.WithPage(request.Page));
+                var result = mapper.Map<CollectionResponse<TrackModel>>(dto.WithPage(request.Page));
 
                 return await Task.FromResult(result);   
             }
@@ -133,15 +123,18 @@ namespace ArtistManagement.WebApi.Application.Services
             }
         }
 
-        public async Task<SingleResponse<ArtistModel>> Get(string id)
+        public async Task<SingleResponse<TrackModel>> Get(string id)
         {
             try
             {
-                // get by id
-                var data = repository.Get(id);
+                // get artist by id
+                var artist = repository.Get(e => e.Tracks);
+
+                // get track by id
+                var data = artist.SelectMany(e => e.Tracks.Where(t => t.Id.Equals(id))).SingleOrDefault();
 
                 // mapping into result
-                var result = mapper.Map<SingleResponse<ArtistModel>>(data);
+                var result = mapper.Map<SingleResponse<TrackModel>>(data);
 
                 return await Task.FromResult(result);
             }
@@ -151,12 +144,15 @@ namespace ArtistManagement.WebApi.Application.Services
             }
         }
 
-        public async Task<SingleResponse<ArtistModel>> Add(ArtistPostModel payload)
+        public async Task<SingleResponse<TrackModel>> Add(TrackPostModel payload)
         {
             try
             {
-                // create new
-                var data = new ArtistEntity(payload.Name, payload.Nationality);
+                // get artist by id
+                var artist = repository.Get(payload.ArtistId, e => e.Tracks);
+
+                // add new track
+                var data = artist.AddTrack(payload.Title);
 
                 // add into repository
                 repository.Add(data);
@@ -165,7 +161,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 await repository.SaveChangesAsync();
 
                 // mapping into result
-                return mapper.Map<SingleResponse<ArtistModel>>(data);   
+                return mapper.Map<SingleResponse<TrackModel>>(data);   
             }
             catch (Exception ex)
             {
@@ -173,15 +169,18 @@ namespace ArtistManagement.WebApi.Application.Services
             }
         }
 
-        public async Task<SingleResponse<ArtistModel>> Update(ArtistPutModel payload)
+        public async Task<SingleResponse<TrackModel>> Update(TrackPutModel payload)
         {
             try
             {
-                // get by id
-                var data = repository.Get(payload.Id);
+                // get artist by id
+                var artist = repository.Get(payload.ArtistId, e => e.Tracks);
                 
-                // set update
-                data.SetUpdate(payload.Name, payload.Nationality);
+                // get track by id
+                var data = artist.Tracks.SingleOrDefault(e => e.Id.Equals(payload.Id));
+                
+                // set udate
+                data.SetUpdate(payload.Title);
 
                 // update repository
                 repository.Update(data);
@@ -190,7 +189,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 await repository.SaveChangesAsync();
 
                 // mapping into result
-                return mapper.Map<SingleResponse<ArtistModel>>(data);   
+                return mapper.Map<SingleResponse<TrackModel>>(data);   
             }
             catch (Exception ex)
             {
@@ -202,8 +201,11 @@ namespace ArtistManagement.WebApi.Application.Services
         {
             try
             {
-                // get by id
-                var data = repository.Get(id);
+                // get all
+                var artist = repository.Get(e => e.Tracks);
+
+                // get track by id
+                var data = artist.SelectMany(e => e.Tracks.Where(t => t.Id.Equals(id))).SingleOrDefault();
 
                 // delete from repository
                 repository.Delete(data);

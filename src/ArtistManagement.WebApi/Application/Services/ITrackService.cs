@@ -6,8 +6,8 @@ using ArtistManagement.WebApi.V1.Models;
 
 namespace ArtistManagement.WebApi.Application.Services
 {
-    public interface IArtistService : IService<ArtistModel, ArtistPostModel, ArtistPutModel, ArtistField>
+    public interface ITrackService : IService<TrackModel, TrackPostModel, TrackPutModel, TrackField>
     {
-        Task<SingleResponse<ArtistModel>> Get(string id);
+        Task<SingleResponse<TrackModel>> Get(string id);
     }
 }

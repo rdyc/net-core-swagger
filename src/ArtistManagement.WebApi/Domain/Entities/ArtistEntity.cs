@@ -29,10 +29,10 @@ namespace ArtistManagement.WebApi.Domain.Entities
         #region Tracks
         public ICollection<TrackEntity> Tracks { get; private set; }
 
-        public TrackEntity AddTrack(string title, DateTime release)
+        public TrackEntity AddTrack(string title)
         {
             var track = new TrackEntity(
-                artistId: Id,
+                artist: this,
                 title: title
             );
 

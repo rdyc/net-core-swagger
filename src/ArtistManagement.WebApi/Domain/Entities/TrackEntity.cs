@@ -12,10 +12,11 @@ namespace ArtistManagement.WebApi.Domain.Entities
 
         }
 
-        public TrackEntity(string artistId, string title)
+        public TrackEntity(ArtistEntity artist, string title)
         {
             Id = Guid.NewGuid().ToString();
-            ArtistId = artistId;
+            ArtistId = artist.Id;
+            Artist = artist;
             Title = title;
         }
         #endregion
@@ -26,6 +27,13 @@ namespace ArtistManagement.WebApi.Domain.Entities
         public string ArtistId { get; private set; }
         
         public string Title { get; private set; }
+        #endregion
+
+        #region Methods
+        public void SetUpdate(string title)
+        {
+            Title = title;
+        }
         #endregion
 
         #region Artist
