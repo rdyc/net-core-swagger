@@ -152,7 +152,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 var artist = repository.Get(payload.ArtistId, e => e.Tracks);
 
                 // add new track
-                var data = artist.AddTrack(payload.Title);
+                var data = artist.AddTrack(payload.Title, payload.Genre, payload.Duration);
 
                 // add into repository
                 repository.Add(data);
@@ -180,7 +180,7 @@ namespace ArtistManagement.WebApi.Application.Services
                 var data = artist.Tracks.SingleOrDefault(e => e.Id.Equals(payload.Id));
                 
                 // set udate
-                data.SetUpdate(payload.Title);
+                data.SetUpdate(payload.Title, payload.Genre, payload.Duration);
 
                 // update repository
                 repository.Update(data);

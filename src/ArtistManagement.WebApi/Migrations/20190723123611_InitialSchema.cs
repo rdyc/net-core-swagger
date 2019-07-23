@@ -13,8 +13,7 @@ namespace ArtistManagement.WebApi.Migrations
                 {
                     Id = table.Column<string>(maxLength: 14, nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
-                    Nationality = table.Column<string>(maxLength: 1, nullable: false),
-                    Genre = table.Column<string>(nullable: true)
+                    Nationality = table.Column<string>(maxLength: 1, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +46,9 @@ namespace ArtistManagement.WebApi.Migrations
                 {
                     Id = table.Column<string>(maxLength: 14, nullable: false),
                     ArtistId = table.Column<string>(maxLength: 14, nullable: false),
-                    Title = table.Column<string>(maxLength: 255, nullable: false)
+                    Title = table.Column<string>(maxLength: 255, nullable: false),
+                    Genre = table.Column<string>(maxLength: 50, nullable: false),
+                    Duration = table.Column<TimeSpan>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,8 +79,8 @@ namespace ArtistManagement.WebApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AlbumTracks_Tracks_AlbumId",
-                        column: x => x.AlbumId,
+                        name: "FK_AlbumTracks_Tracks_TrackId",
+                        column: x => x.TrackId,
                         principalTable: "Tracks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -94,6 +95,11 @@ namespace ArtistManagement.WebApi.Migrations
                 name: "IX_AlbumTracks_AlbumId",
                 table: "AlbumTracks",
                 column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AlbumTracks_TrackId",
+                table: "AlbumTracks",
+                column: "TrackId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tracks_ArtistId",

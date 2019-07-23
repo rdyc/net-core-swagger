@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ArtistManagement.WebApi.Migrations
 {
     [DbContext(typeof(ArtistDbContext))]
-    [Migration("20190722114102_InitialSchema")]
+    [Migration("20190723123611_InitialSchema")]
     partial class InitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,6 +59,8 @@ namespace ArtistManagement.WebApi.Migrations
 
                     b.HasIndex("AlbumId");
 
+                    b.HasIndex("TrackId");
+
                     b.ToTable("AlbumTracks");
                 });
 
@@ -67,8 +69,6 @@ namespace ArtistManagement.WebApi.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(14);
-
-                    b.Property<string>("Genre");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -92,6 +92,12 @@ namespace ArtistManagement.WebApi.Migrations
                     b.Property<string>("ArtistId")
                         .IsRequired()
                         .HasMaxLength(14);
+
+                    b.Property<TimeSpan>("Duration");
+
+                    b.Property<string>("Genre")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -121,7 +127,7 @@ namespace ArtistManagement.WebApi.Migrations
 
                     b.HasOne("ArtistManagement.WebApi.Domain.Entities.TrackEntity", "Track")
                         .WithMany("AlbumTracks")
-                        .HasForeignKey("AlbumId")
+                        .HasForeignKey("TrackId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

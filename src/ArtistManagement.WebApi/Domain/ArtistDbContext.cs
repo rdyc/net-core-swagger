@@ -44,6 +44,8 @@ namespace ArtistManagement.WebApi.Domain
             builder.Property(e => e.Id).HasMaxLength(14).IsRequired();
             builder.Property(e => e.ArtistId).HasMaxLength(14).IsRequired();
             builder.Property(e => e.Title).HasMaxLength(255).IsRequired();
+            builder.Property(e => e.Genre).HasMaxLength(50).IsRequired();
+            builder.Property(e => e.Duration).IsRequired();
         }
 
         private static void ConfigureAlbum(EntityTypeBuilder<AlbumEntity> builder)
@@ -64,7 +66,7 @@ namespace ArtistManagement.WebApi.Domain
             builder.HasKey(e => e.Id);
 
             builder.HasOne(e => e.Album).WithMany(e => e.Tracks).HasForeignKey(e => e.AlbumId);
-            builder.HasOne(e => e.Track).WithMany(e => e.AlbumTracks).HasForeignKey(e => e.AlbumId);
+            builder.HasOne(e => e.Track).WithMany(e => e.AlbumTracks).HasForeignKey(e => e.TrackId);
 
             builder.Property(e => e.Id).HasMaxLength(14).IsRequired();
             builder.Property(e => e.AlbumId).HasMaxLength(14).IsRequired();

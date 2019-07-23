@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ArtistManagement.WebApi.Domain;
 using ArtistManagement.WebApi.Domain.Entities;
@@ -24,7 +25,8 @@ namespace ArtistManagement.WebApi.Bootstrap
                     dbContext.Database.Migrate();
 
                     // seeding data
-                    SeedArtists(dbContext.Artists);
+                    SeedArtists(dbContext);
+                    // SeedArtists(dbContext.Artists);
 
                     // save changes
                     dbContext.SaveChanges();
@@ -34,16 +36,72 @@ namespace ArtistManagement.WebApi.Bootstrap
             return app;
         }
 
+        private static void SeedArtists(ArtistDbContext context)
+        {
+            var nationalities = new [] { "Argentina", "Australia", "Austria", "Brazil", "Canada", "Denmark", "England", "France", "Germany", "Indonesia", "Italy", "Malaysia", "Rusia", "United States", "Zimbabwe" };
+            var genres = new []{ "Alternative", "Anime", "Blues", "Classical", "Country", "Dance", "Hip-hop", "Pop", "Rock", "Jazz", "R&B/Soul", "Reggae" };
+            
+            if (!context.Artists.Any())
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    var faker = new Faker();
+
+                    // add artists
+                    var artist = new ArtistEntity(
+                        name: faker.Person.FullName,
+                        nationality: faker.PickRandom(nationalities)
+                    );
+
+                    context.Entry(artist).State = EntityState.Added;
+
+                    // add artist tracks
+                    IList<string> trackIds = new List<string>();
+                    for (int j = 0; j < faker.Random.Int(3, 10); j++)
+                    {
+                        var track = artist.AddTrack(
+                            title: faker.Random.Words(3),
+                            genre: faker.PickRandom(genres),
+                            duration: TimeSpan.FromSeconds(faker.Random.Long(120, 380))
+                        );
+
+                        trackIds.Add(track.Id);
+                        
+                        context.Entry(track).State = EntityState.Added;
+                    }
+
+                    // add artist albums
+                    for (int j = 0; j < faker.Random.Int(1, 2); j++)
+                    {
+                        var album = artist.AddAlbum(
+                            title: faker.Random.Words(2), 
+                            release: faker.Date.Between(DateTime.Now.AddYears(2000).Date, DateTime.Now.Date)
+                        );
+
+                        context.Entry(album).State = EntityState.Added;
+
+                        // add album tracks
+                        foreach (var item in trackIds)
+                        {
+                            var albumTrack = album.AddTrack(trackId: item);
+
+                            context.Entry(albumTrack).State = EntityState.Added;
+                        }
+                    }
+                }
+            }
+        }
+
         private static void SeedArtists(DbSet<ArtistEntity> entity)
         {
             if (!entity.Any())
             {
-                var faker = new Faker<ArtistEntity>()
+                var artist = new Faker<ArtistEntity>()
                     .RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
                     .RuleFor(u => u.Name, f => f.Person.FullName)
                     .RuleFor(u => u.Nationality, f => f.Person.Address.State);
 
-                var data = faker.Generate(200);
+                var data = artist.Generate(200);
                     
                 entity.AddRange(data);
             }
