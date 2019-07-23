@@ -12,9 +12,9 @@ namespace ArtistManagement.WebApi.Domain.Entities
 
         }
 
-        public AlbumEntity(string title, DateTime release)
+        public AlbumEntity(string name, DateTime release)
         { 
-            Name = title;
+            Name = name;
             Release = release;
         }
         #endregion

@@ -72,7 +72,7 @@ namespace ArtistManagement.WebApi.Bootstrap
 
                     // add albums
                     var album = new AlbumEntity(
-                        title: faker.Random.Words(2), 
+                        name: faker.Random.Words(2), 
                         release: faker.Date.Between(DateTime.Now.AddYears(-10).Date, DateTime.Now.Date)
                     );
 

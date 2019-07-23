@@ -10,6 +10,7 @@ namespace ArtistManagement.WebApi.Bootstrap
         public CustomMapperProfile()
         {
             CreateMap<AlbumEntity, AlbumModel>()
+                .ForMember(m => m.Release, o => o.MapFrom(s => s.Release.Date))
                 .ForMember(m => m.Tracks, o => o.MapFrom(s => s.AlbumTracks.Select(e => e.Track)));
 
             CreateMap<TrackEntity, AlbumTrackModel>()

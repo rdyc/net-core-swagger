@@ -141,16 +141,26 @@ namespace ArtistManagement.WebApi.Application.Services
             try
             {
                 // create new
-                var data = new AlbumEntity(payload.Name, payload.Release);
+                var data = new AlbumEntity(
+                    name: payload.Name, 
+                    release: payload.Release
+                );
 
                 // add into repository
                 repository.Add(data);
 
+                // add new tracks
+                foreach (var trackId in payload.TrackIds)
+                {
+                    var track = data.AddTrack(trackId);
+
+                    repository.Add(track);
+                }
+
                 // save changes
                 await repository.SaveChangesAsync();
 
-                // mapping into result
-                return mapper.Map<SingleResponse<AlbumModel>>(data);   
+                return await Get(data.Id);
             }
             catch (Exception ex)
             {
@@ -171,11 +181,24 @@ namespace ArtistManagement.WebApi.Application.Services
                 // update repository
                 repository.Update(data);
 
+                // remove existing tracks
+                foreach (var track in data.AlbumTracks)
+                {
+                    repository.Delete(track);
+                }
+
+                // add new tracks
+                foreach (var trackId in payload.TrackIds)
+                {
+                    var track = data.AddTrack(trackId);
+
+                    repository.Add(track);
+                }
+
                 // save changes
                 await repository.SaveChangesAsync();
 
-                // mapping into result
-                return mapper.Map<SingleResponse<AlbumModel>>(data);   
+                return await Get(data.Id);   
             }
             catch (Exception ex)
             {
