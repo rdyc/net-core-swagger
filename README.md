@@ -118,30 +118,12 @@ $ dotnet add package AutoMapper --version 8.1.1
 $ dotnet ef migrations add InitialSchema -o Migrations
 ```
 
-#### Installing Package
-At this time, we will use Swashbuckle packages
-```
-$ Install-Package Swashbuckle.Core
-```
-
 ### Startup Configuration
 
-### Configure Media Types
-
-### Writing Endpoints/Resources
+### Define Endpoints/Resources
 
 ### Define Request Bodies
 
 ### Define Responses
 
 ### Define Examples
-
-### Integrate Authentication
-
-### Release
-
-
-
-
-
-

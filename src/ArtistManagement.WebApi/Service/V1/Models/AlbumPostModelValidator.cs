@@ -6,11 +6,11 @@ namespace ArtistManagement.WebApi.V1.Models
 {
     internal class AlbumPostModelValidator : AbstractValidator<AlbumPostModel>
     {
-        private readonly ITrackService service;
+        private readonly ITrackService track;
         
-        public AlbumPostModelValidator(ITrackService service)
+        public AlbumPostModelValidator(ITrackService track)
         {
-            this.service = service ?? throw new ArgumentNullException(nameof(service));
+            this.track = track ?? throw new ArgumentNullException(nameof(track));
 
             RuleFor(s => s.Name)
                 .NotNull()
@@ -30,7 +30,7 @@ namespace ArtistManagement.WebApi.V1.Models
 
         private bool BeValidTrack(string id)
         {
-            return service.IsValidAsync(id).Result;
+            return track.IsValidAsync(id).Result;
         }
     }
 }
