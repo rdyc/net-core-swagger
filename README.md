@@ -110,33 +110,20 @@ After all dependencies are installed, try to run/debug your project by pressing 
 ["value1","value2"]
 ```
 
-#### Add More API Controllers
-For the next step, lets try add another CRUD api controller. Each controllers action will need http  operations: GET, POST, PUT & Delete.
+#### Code Enhancements
+For the next step, lets make some code enhancements and try add another CRUD api controller. Each controllers action will have standart http operations such as: GET, POST, PUT & Delete.
 
-#### Installing Package
-At this time, we will use Swashbuckle packages
 ```
-$ Install-Package Swashbuckle.Core
+$ dotnet add package AutoMapper --version 8.1.1
+$ dotnet ef migrations add InitialSchema -o Migrations
 ```
 
 ### Startup Configuration
 
-### Configure Media Types
-
-### Writing Endpoints/Resources
+### Define Endpoints/Resources
 
 ### Define Request Bodies
 
 ### Define Responses
 
 ### Define Examples
-
-### Integrate Authentication
-
-### Release
-
-
-
-
-
-
