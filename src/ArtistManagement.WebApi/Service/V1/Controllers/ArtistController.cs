@@ -15,6 +15,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
     /// <summary>
     /// Artist controller
     /// </summary>
+    [Produces("application/json"), Consumes("application/json")]
     [ApiVersion("1"), Route("v{version:apiVersion}/artists")]
     [ApiController]
     public class ArtistController : ControllerBase
