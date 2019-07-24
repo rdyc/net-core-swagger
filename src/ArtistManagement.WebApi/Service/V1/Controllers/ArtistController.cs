@@ -95,11 +95,20 @@ namespace ArtistManagement.WebApi.V1.Controllers
         [HttpPut("{artistId}")]
         [SwaggerOperation(OperationId = "ArtistPut")]
         [SwaggerResponse((int)HttpStatusCode.Accepted, Type = typeof(SingleResponse<ArtistModel>))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Put(string artistId, [FromBody]ArtistPutModel payload)
         {
-            var updated = await artist.Update(payload.WithId(artistId));
+            var isValid = await artist.IsValidAsync(artistId);
 
-            return Accepted(mapper.Map<SingleResponse<ArtistModel>>(updated));
+            if (isValid)
+            {
+                var updated = await artist.Update(payload.WithId(artistId));
+
+                return Accepted(mapper.Map<SingleResponse<ArtistModel>>(updated));
+            }
+            else{
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -110,11 +119,20 @@ namespace ArtistManagement.WebApi.V1.Controllers
         [HttpDelete("{artistId}")]
         [SwaggerOperation(OperationId = "ArtistDelete")]
         [SwaggerResponse((int)HttpStatusCode.Accepted)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete(string artistId)
         {
-            await artist.Delete(artistId);
+            var isValid = await artist.IsValidAsync(artistId);
 
-            return Accepted();
+            if (isValid)
+            {
+                await artist.Delete(artistId);
+
+                return Accepted();
+            }
+            else{
+                return NotFound();
+            }
         }
     }
 }

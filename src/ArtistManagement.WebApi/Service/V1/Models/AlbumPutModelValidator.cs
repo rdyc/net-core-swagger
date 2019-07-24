@@ -14,9 +14,9 @@ namespace ArtistManagement.WebApi.V1.Models
             this.album = album ?? throw new ArgumentNullException(nameof(album));
             this.track = track ?? throw new ArgumentNullException(nameof(track));
 
-            RuleFor(s => s.Id)
-                .Must(BeValidAlbum)
-                .WithMessage("Unregistered album id.");
+            // RuleFor(s => s.Id)
+            //     .Must(BeValidAlbum)
+            //     .WithMessage("Unregistered album id.");
 
             RuleFor(s => s.Name)
                 .NotNull()

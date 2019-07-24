@@ -102,11 +102,20 @@ namespace ArtistManagement.WebApi.V1.Controllers
             Description = "Modify album description goes here", 
             OperationId = "AlbumPut")]
         [SwaggerResponse((int)HttpStatusCode.Accepted, Type = typeof(SingleResponse<AlbumModel>))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Put(string albumId, [FromBody]AlbumPutModel payload)
         {
-            var updated = await service.Update(payload.WithId(albumId));
+            var isValid = await service.IsValidAsync(albumId);
 
-            return Accepted(mapper.Map<SingleResponse<AlbumModel>>(updated));
+            if (isValid)
+            {
+                var updated = await service.Update(payload.WithId(albumId));
+
+                return Accepted(mapper.Map<SingleResponse<AlbumModel>>(updated));
+            }
+            else{
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -119,11 +128,20 @@ namespace ArtistManagement.WebApi.V1.Controllers
             Description = "Delete album description goes here ", 
             OperationId = "AlbumDelete")]
         [SwaggerResponse((int)HttpStatusCode.Accepted)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete(string albumId)
         {
-            await service.Delete(albumId);
+            var isValid = await service.IsValidAsync(albumId);
 
-            return Accepted();
+            if (isValid)
+            {
+                await service.Delete(albumId);
+
+                return Accepted();
+            }
+            else{
+                return NotFound();
+            }
         }
     }
 }
