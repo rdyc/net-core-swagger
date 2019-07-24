@@ -17,6 +17,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
     /// </summary>
     [Produces("application/json"), Consumes("application/json")]
     [ApiVersion("1"), Route("v{version:apiVersion}/albums")]
+    [SwaggerTag("Create, read, update and delete albums")]
     [ApiController]
     public class AlbumController : ControllerBase
     {
@@ -40,7 +41,10 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpGet]
-        [SwaggerOperation(OperationId = "AlbumGetAll")]
+        [SwaggerOperation(
+            Description = "All albums description goes here", 
+            OperationId = "AlbumGetAll"
+        )]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(CollectionResponse<AlbumModel>))]
         public async Task<IActionResult> Get([FromQuery]QueryRequest<AlbumField> request)
         {
@@ -54,8 +58,10 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// </summary>
         /// <param name="albumId"></param>
         /// <returns></returns>
-        [Obsolete, HttpGet("{albumId}")]
-        [SwaggerOperation(OperationId = "AlbumGetById")]
+        [HttpGet("{albumId}")]
+        [SwaggerOperation(
+            Description = "Album description goes here", 
+            OperationId = "AlbumGetById")]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(SingleResponse<AlbumModel>))]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string albumId)
@@ -74,7 +80,9 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// <param name="payload">The payload</param>
         /// <returns></returns>
         [HttpPost]
-        [SwaggerOperation(OperationId = "AlbumPost")]
+        [SwaggerOperation(
+            Description = "Create album description goes here", 
+            OperationId = "AlbumPost")]
         [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(SingleResponse<AlbumModel>))]
         public async Task<IActionResult> Post([FromBody]AlbumPostModel payload)
         {
@@ -90,7 +98,9 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// <param name="payload">The payload</param>
         /// <returns></returns>
         [HttpPut("{albumId}")]
-        [SwaggerOperation(OperationId = "AlbumPut")]
+        [SwaggerOperation(
+            Description = "Modify album description goes here", 
+            OperationId = "AlbumPut")]
         [SwaggerResponse((int)HttpStatusCode.Accepted, Type = typeof(SingleResponse<AlbumModel>))]
         public async Task<IActionResult> Put(string albumId, [FromBody]AlbumPutModel payload)
         {
@@ -105,7 +115,9 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// <param name="albumId">The album id</param>
         /// <returns></returns>
         [HttpDelete("{albumId}")]
-        [SwaggerOperation(OperationId = "AlbumDelete")]
+        [SwaggerOperation(
+            Description = "Delete album description goes here ", 
+            OperationId = "AlbumDelete")]
         [SwaggerResponse((int)HttpStatusCode.Accepted)]
         public async Task<IActionResult> Delete(string albumId)
         {

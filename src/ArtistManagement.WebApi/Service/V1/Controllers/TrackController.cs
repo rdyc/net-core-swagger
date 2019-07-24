@@ -17,6 +17,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
     /// </summary>
     [Produces("application/json"), Consumes("application/json")]
     [ApiVersion("1"), Route("v{version:apiVersion}/tracks")]
+    [SwaggerTag("Create, read, update and delete tracks")]
     [ApiController]
     public class TrackController : ControllerBase
     {
@@ -105,7 +106,9 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// <param name="trackId">The track id</param>
         /// <returns></returns>
         [Obsolete, HttpDelete("{trackId}")]
-        [SwaggerOperation(OperationId = "TrackDelete")]
+        [SwaggerOperation(
+            Description = "Please use V2 instead",
+            OperationId = "TrackDelete")]
         [SwaggerResponse((int)HttpStatusCode.Accepted)]
         public async Task<IActionResult> Delete(string trackId)
         {
