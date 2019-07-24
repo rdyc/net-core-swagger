@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtistManagement.WebApi.V1.Controllers
 {
-    [Route("api/v1/tracks")]
+    [Route("v1/tracks")]
     [ApiController]
     public class TrackController : ControllerBase
     {
