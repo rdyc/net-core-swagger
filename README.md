@@ -1,4 +1,4 @@
-# XComm #15 - Documenting REST APIs
+# Documenting REST APIs
 With Swagger (ASP Net Core)
 
 ## Section I : The Background
