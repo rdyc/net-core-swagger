@@ -53,7 +53,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// </summary>
         /// <param name="albumId"></param>
         /// <returns></returns>
-        [HttpGet("{albumId}")]
+        [Obsolete, HttpGet("{albumId}")]
         [SwaggerOperation(OperationId = "AlbumGetById")]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(SingleResponse<AlbumModel>))]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]

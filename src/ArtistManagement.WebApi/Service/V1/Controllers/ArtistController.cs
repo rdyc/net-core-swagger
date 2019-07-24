@@ -72,7 +72,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// </summary>
         /// <param name="payload">The payload</param>
         /// <returns></returns>
-        [HttpPost]
+        [Obsolete, HttpPost]
         [SwaggerOperation(OperationId = "ArtistPost")]
         [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(SingleResponse<ArtistModel>))]
         public async Task<IActionResult> Post([FromBody]ArtistPostModel payload)
