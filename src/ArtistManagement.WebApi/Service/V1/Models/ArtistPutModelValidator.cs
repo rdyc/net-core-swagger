@@ -12,9 +12,9 @@ namespace ArtistManagement.WebApi.V1.Models
         {
             this.artist = artist ?? throw new ArgumentNullException(nameof(artist));
 
-            RuleFor(s => s.Id)
-                .Must(BeValidArtist)
-                .WithMessage("Unregistered artist id.");
+            // RuleFor(s => s.Id)
+            //     .Must(BeValidArtist)
+            //     .WithMessage("Unregistered artist id.");
 
             RuleFor(s => s.Name)
                 .NotNull()
