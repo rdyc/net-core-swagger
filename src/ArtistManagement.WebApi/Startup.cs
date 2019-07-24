@@ -26,6 +26,8 @@ namespace ArtistManagement.WebApi
                 .AddMvc(o => {
                     o.Filters.Add(typeof(ValidateModelStateFilter));
                     o.Filters.Add(typeof(HttpGlobalExceptionFilter));
+                    
+                    o.EnableEndpointRouting = false;
                 })
                 .AddControllersAsServices()
                 .AddFluentValidation(o => o.RunDefaultMvcValidationAfterFluentValidationExecutes = false)

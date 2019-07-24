@@ -103,7 +103,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// </summary>
         /// <param name="trackId">The track id</param>
         /// <returns></returns>
-        [HttpDelete("{trackId}")]
+        [Obsolete, HttpDelete("{trackId}")]
         [SwaggerOperation(OperationId = "TrackDelete")]
         [SwaggerResponse((int)HttpStatusCode.Accepted)]
         public async Task<IActionResult> Delete(string trackId)
