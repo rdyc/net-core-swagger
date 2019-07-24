@@ -17,6 +17,7 @@ namespace ArtistManagement.WebApi.V1.Controllers
     /// </summary>
     [Produces("application/json"), Consumes("application/json")]
     [ApiVersion("1"), Route("v{version:apiVersion}/tracks")]
+    [SwaggerTag("Create, read, update and delete tracks")]
     [ApiController]
     public class TrackController : ControllerBase
     {
