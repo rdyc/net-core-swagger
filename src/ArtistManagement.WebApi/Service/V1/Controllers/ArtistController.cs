@@ -75,7 +75,9 @@ namespace ArtistManagement.WebApi.V1.Controllers
         /// <param name="payload">The payload</param>
         /// <returns></returns>
         [Obsolete, HttpPost]
-        [SwaggerOperation(OperationId = "ArtistPost")]
+        [SwaggerOperation(
+            Description = "Please use V2 instead",
+            OperationId = "ArtistPost")]
         [SwaggerResponse((int)HttpStatusCode.Created, Type = typeof(SingleResponse<ArtistModel>))]
         public async Task<IActionResult> Post([FromBody]ArtistPostModel payload)
         {
