@@ -6,14 +6,16 @@ using ArtistManagement.WebApi.Domain.Entities;
 using Bogus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace ArtistManagement.WebApi.Bootstrap
 {
     public static class ApplicationBuilder
     {
-        public static IApplicationBuilder UseArtistMigration(this IApplicationBuilder app, IHostingEnvironment env)
+        public static IApplicationBuilder UseDbMigration(this IApplicationBuilder app, IHostingEnvironment env)
         {
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -32,6 +34,32 @@ namespace ArtistManagement.WebApi.Bootstrap
                     dbContext.SaveChanges();
                 }
             }
+
+            return app;
+        }
+
+        public static IApplicationBuilder UseMySwagger(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
+        {
+            // Enable middleware to serve generated Swagger as a JSON endpoint
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
+            app.UseSwaggerUI(c =>
+                {
+                    // build a swagger endpoint for each discovered API version
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"API {description.GroupName.ToUpperInvariant()} Docs");
+                    }
+
+                    c.DocumentTitle = "JOOXTify API";
+                    c.RoutePrefix = string.Empty;
+                    c.DefaultModelRendering(ModelRendering.Model);
+                    c.DisplayRequestDuration();
+                    c.DocExpansion(DocExpansion.None);
+                    c.EnableDeepLinking();
+                    c.EnableFilter();
+                });
 
             return app;
         }
