@@ -59,6 +59,7 @@ namespace ArtistManagement.WebApi.Bootstrap
                     c.DocExpansion(DocExpansion.None);
                     c.EnableDeepLinking();
                     c.EnableFilter();
+                    c.InjectStylesheet("/swagger-ui/custom.css");
                 });
 
             return app;

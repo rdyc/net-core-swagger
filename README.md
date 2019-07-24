@@ -117,13 +117,3 @@ For the next step, lets make some code enhancements and try add another CRUD api
 $ dotnet add package AutoMapper --version 8.1.1
 $ dotnet ef migrations add InitialSchema -o Migrations
 ```
-
-### Startup Configuration
-
-### Define Endpoints/Resources
-
-### Define Request Bodies
-
-### Define Responses
-
-### Define Examples

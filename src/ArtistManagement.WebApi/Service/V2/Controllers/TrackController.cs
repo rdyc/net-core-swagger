@@ -1,11 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using ArtistManagement.WebApi.Application.Fields;
-using ArtistManagement.WebApi.Application.Requests;
-using ArtistManagement.WebApi.Application.Responses;
 using ArtistManagement.WebApi.Application.Services;
-using ArtistManagement.WebApi.V1.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -15,6 +11,7 @@ namespace ArtistManagement.WebApi.V2.Controllers
     /// <summary>
     /// Track controller
     /// </summary>
+    [Produces("application/json"), Consumes("application/json")]
     [ApiVersion("2"), Route("v{version:apiVersion}/tracks")]
     [ApiController]
     public class TrackController : ControllerBase
