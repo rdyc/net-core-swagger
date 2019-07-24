@@ -13,6 +13,7 @@ namespace ArtistManagement.WebApi.V2.Controllers
     /// <summary>
     /// Album controller
     /// </summary>
+    [Produces("application/json"), Consumes("application/json")]
     [ApiVersion("2"), Route("v{version:apiVersion}/albums")]
     [ApiController]
     public class AlbumController : ControllerBase
