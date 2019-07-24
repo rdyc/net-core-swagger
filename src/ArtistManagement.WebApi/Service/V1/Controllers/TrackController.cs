@@ -93,11 +93,20 @@ namespace ArtistManagement.WebApi.V1.Controllers
         [HttpPut("{trackId}")]
         [SwaggerOperation(OperationId = "TrackPut")]
         [SwaggerResponse((int)HttpStatusCode.Accepted, Type = typeof(SingleResponse<TrackModel>))]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Put(string trackId, [FromBody]TrackPutModel payload)
         {
-            var updated = await track.Update(payload.WithId(trackId));
+            var isValid = await track.IsValidAsync(trackId);
 
-            return Accepted(mapper.Map<SingleResponse<TrackModel>>(updated));
+            if (isValid)
+            {
+                var updated = await track.Update(payload.WithId(trackId));
+
+                return Accepted(mapper.Map<SingleResponse<TrackModel>>(updated));
+            }
+            else{
+                return NotFound();
+            }
         }
 
         /// <summary>
@@ -110,11 +119,20 @@ namespace ArtistManagement.WebApi.V1.Controllers
             Description = "Please use V2 instead",
             OperationId = "TrackDelete")]
         [SwaggerResponse((int)HttpStatusCode.Accepted)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete(string trackId)
         {
-            await track.Delete(trackId);
+            var isValid = await track.IsValidAsync(trackId);
 
-            return Accepted();
+            if (isValid)
+            {
+                await track.Delete(trackId);
+
+                return Accepted();
+            }
+            else{
+                return NotFound();
+            }
         }
     }
 }
